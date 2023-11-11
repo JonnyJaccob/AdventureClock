@@ -1,0 +1,19 @@
+{
+  "name": "adventureclock",
+  "version": "1.0.0",
+  "description": "Un modulo para administrar un juego de aventureros.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonnyJaccob/AdventureClock.git"
+  },
+  "author": "JonnyJaccob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonnyJaccob/AdventureClock/issues"
+  },
+  "homepage": "https://github.com/JonnyJaccob/AdventureClock#readme"
+}
