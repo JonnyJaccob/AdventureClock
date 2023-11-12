@@ -2,6 +2,7 @@
 const express = require('express');
 const setupSwagger = require('./swagger');
 const path = require('path');
+const { router, getListaNombres } = require(path.join(__dirname, '../Aventurero/informacion'));
 
 const app = express();
 const PORT = process.env.PORT || 8083;
@@ -16,9 +17,7 @@ app.use(express.json());
 setupSwagger(app, PORT);
 
 // Rutas de Express
-
-const informacionRouter = require(path.join(__dirname, '../Aventurero/informacion'));
-app.use('/aventurero/informacion', informacionRouter);
+app.use('/aventurero/informacion', getListaNombres, router);
 
 
 // Manejo de errores
