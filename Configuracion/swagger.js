@@ -2,21 +2,21 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
+const fs = require('fs');
+
+const swaggerOptionsPath = path.join(__dirname, './swagger.json');
+const swaggerOptionsData = fs.readFileSync(swaggerOptionsPath);
+const swaggerOptions = JSON.parse(swaggerOptionsData);
+const nuevaRuta1 = path.join(__dirname, '../Aventurero/informacion.js');
+//const nuevaRuta2 = path.join(__dirname, '../Aventurero/informacion.js');
+
+//swaggerOptions.apis.push(nuevaRuta1, nuevaRuta2);
+swaggerOptions.apis.push(nuevaRuta1);
 
 function setupSwagger(app, PORT) {
-    const swaggerOptions = {
-        definition: {
-            openapi: '3.0.0',
-            info: {
-                title: 'API Adventure Clock',
-                version: '1.0.1',
-            },
-            servers: [{ url: `http://localhost:${PORT}` }],
-        },
-        apis: [
-            `${path.join(__dirname, '../Aventurero/informacion.js')}`
-        ],
-    };
+    swaggerOptions.definition.servers = [{ url: `http://localhost:${PORT}` }];
+    //const jsonString = JSON.stringify(swaggerOptions, null, 2);
+    //console.log(jsonString);
 
     const swaggerDocs = swaggerJSDoc(swaggerOptions);
 

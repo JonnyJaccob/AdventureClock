@@ -2,10 +2,14 @@
 const express = require('express');
 const setupSwagger = require('./swagger');
 const path = require('path');
-const { router, getListaNombres } = require(path.join(__dirname, '../Aventurero/informacion'));
+const { routerAventurero, getListaNombres, asignarNombresAzar,} = require(path.join(__dirname, '../Aventurero/informacion'));
+const { routerObjeto } = require(path.join(__dirname, '../objeto/objetos'));
+const { routerConsulta } = require(path.join(__dirname,'./consultas'))
 
 const app = express();
 const PORT = process.env.PORT || 8083;
+
+
 
 // Establecer el puerto en la aplicación
 app.set('port', PORT);
@@ -17,8 +21,11 @@ app.use(express.json());
 setupSwagger(app, PORT);
 
 // Rutas de Express
-app.use('/aventurero/informacion', getListaNombres, router);
+app.use('/aventurero/informacion', routerAventurero );
+app.use('/objeto',routerObjeto);
 
+
+app.use('/historia/',routerConsulta)
 
 // Manejo de errores
 app.use((err, req, res, next) => {

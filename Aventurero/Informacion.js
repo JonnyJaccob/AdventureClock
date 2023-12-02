@@ -1,6 +1,6 @@
 // Aventurero/informacion.js
 
-const router = require('express').Router();
+const routerAventurero = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 
@@ -27,7 +27,7 @@ const cargarJsonMiddleware = (req, res, next) => {
 
 /**
  * @swagger
- * /aventurero/informacion:
+ * /aventurero/informacion/nombre:
  *   get:
  *     summary: Obtiene la lista completa de nombres y apellidos.
  *     tags:
@@ -51,7 +51,7 @@ const cargarJsonMiddleware = (req, res, next) => {
  *               mensaje: "Error al obtener la lista completa"
  *               tipo: "Error interno del servidor"
  */
-router.get('/', cargarJsonMiddleware, async (req, res) => {
+routerAventurero.get('/nombre',cargarJsonMiddleware, async (req, res) => {
     try {
         // Enviar la lista completa como respuesta
         res.json(nombresData);
@@ -63,7 +63,7 @@ router.get('/', cargarJsonMiddleware, async (req, res) => {
 
 /**
  * @swagger
- * /aventurero/informacion/asignar:
+ * /aventurero/informacion/nombre/asignar:
  *   get:
  *     summary: Asigna nombres y apellidos al azar a una persona.
  *     tags:
@@ -84,7 +84,7 @@ router.get('/', cargarJsonMiddleware, async (req, res) => {
  *               mensaje: "Error al asignar nombres y apellidos al azar"
  *               tipo: "Error interno del servidor"
  */
-router.get('/asignar', cargarJsonMiddleware, async (req, res) => {
+routerAventurero.get('/nombre/asignar',cargarJsonMiddleware , async (req, res) => {
     var data = nombresData
     try {
         // Asignar nombres y apellidos al azar
@@ -95,6 +95,172 @@ router.get('/asignar', cargarJsonMiddleware, async (req, res) => {
         res.json({ nombre: nombreAleatorio, apellido: apellidoAleatorio });
     } catch (err) {
         res.status(500).json({ mensaje: "Error al obtener la persona al azar", tipo: err.message });
+    }
+});
+
+/**
+ * @swagger
+ * /aventurero/informacion/raza:
+ *   get:
+ *     summary: Obtiene una raza al azar o según el índice proporcionado.
+ *     tags:
+ *       - aventurero
+ *     parameters:
+ *       - in: query
+ *         name: raza
+ *         description: Índice de la raza deseada. Si no se proporciona, se elige una raza al azar.
+ *         schema:
+ *           type: integer
+ *           format: int32
+ *     responses:
+ *       '200':
+ *         description: Devuelve la raza seleccionada.
+ *         content:
+ *           application/json:
+ *             example:
+ *               raza: "Humano"
+ *       '400':
+ *         description: Índice de raza no válido o solicitud inválida.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Índice de raza no válido"
+ *               tipo: "Solicitud inválida"
+ *       '500':
+ *         description: Error al procesar la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error al procesar la solicitud"
+ *               tipo: "Error interno del servidor"
+ */
+const razas = [
+    "Humano",
+    "Enano",
+    "Draconico",
+    "Ogro",
+    "Lagarto",
+    "Minotaruo",
+    "Nueva era",
+    "Elfo",
+    "Demoniaco",
+    "Barbaro",
+    "Gente escombro",
+    "Intelectual",
+    "Enano",
+    "Hobbit",
+    "No muerto",
+    "Argentino"
+]
+routerAventurero.get('/raza',cargarJsonMiddleware, async (req, res) => {
+    try {
+        // Obtener el parámetro de la raza de la solicitud
+        const razaElegida = req.query.raza;
+
+        // Verificar si se proporcionó una raza y si es válida
+        if (razaElegida !== undefined) {
+            const indiceRaza = parseInt(razaElegida);
+
+            // Verificar si el índice es un número válido y está dentro del rango del array
+            if (!isNaN(indiceRaza) && indiceRaza >= 0 && indiceRaza < razas.length) {
+                res.json({ raza: razas[indiceRaza] });
+            } else {
+                res.status(400).json({ mensaje: "Índice de raza no válido", tipo: "Solicitud inválida" });
+            }
+        } else {
+            // Si no se proporciona una raza, obtener una al azar
+            const razaAleatoria = razas[Math.floor(Math.random() * razas.length)];
+            res.json({ raza: razaAleatoria });
+        }
+    } catch (err) {
+        res.status(500).json({ mensaje: "Error al procesar la solicitud", tipo: "Error interno del servidor" });
+    }
+});
+
+/**
+ * @swagger
+ * /atributos:
+ *   get:
+ *     summary: Obtiene atributos basados en parámetros de nivel y tendencia.
+ *     tags:
+ *       - personaje
+ *     parameters:
+ *       - in: query
+ *         name: lvlMinimo
+ *         required: true
+ *         description: Nivel mínimo del personaje.
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: lvlMaximo
+ *         required: true
+ *         description: Nivel máximo del personaje.
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: tendencia
+ *         required: true
+ *         description: Tendencia del personaje (entre 1 y 10).
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Atributos generados exitosamente.
+ *         content:
+ *           application/json:
+ *             example:
+ *               ptsVida: 50
+ *               ptsFuerza: 8
+ *               ptsDestreza: 12
+ *               ptsPoderDestreza: 5
+ *               ptsPuntoMental: 20
+ *               ptsAgilidad: 15
+ *               ptsInteligencia: 18
+ *               ptsFe: 10
+ *       400:
+ *         description: Parámetros inválidos.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Parámetros inválidos"
+ *               tipo: "Solicitud inválida"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error interno del servidor"
+ *               tipo: "Error interno del servidor"
+ */
+routerAventurero.get('/atributos', cargarJsonMiddleware, async (req, res) => {
+    try {
+        const lvlMinimo = req.query.lvlMinimo;
+        const lvlMaximo = req.query.lvlMaximo;
+        const tendencia = req.query.tendencia
+        if (!isNaN(lvlMinimo) 
+                && !isNaN(lvlMaximo) 
+                && !isNaN(tendencia) 
+                && tendencia > 0 
+                && tendencia <= 10) {
+                const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia,
+                     ptsFe] = Array(8).fill(0).map(() => calcularValorConTendencia(lvlMinimo, lvlMaximo, tendencia));
+                
+                res.status(200).json({ 
+                    ptsVida: ptsVida,
+                    ptsFuerza: ptsFuerza,
+                    ptsDestreza: ptsDestreza,
+                    ptsPoderDestreza: ptsPoderDestreza,
+                    ptsPuntoMental: ptsPuntoMental,
+                    ptsAgilidad: ptsAgilidad,
+                    ptsInteligencia: ptsInteligencia,
+                    ptsFe: ptsFe
+                });
+        } else {
+            res.status(400).json({ mensaje: "Parámetros inválidos", tipo: "Solicitud inválida" });
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        res.status(500).json({ mensaje: "Error interno del servidor", tipo: "Error interno del servidor" });
     }
 });
 
@@ -134,8 +300,16 @@ const asignarNombresAzar = () => {
         throw new Error('Error al asignar nombres y apellidos al azar');
     }
 };
+
+function calcularValorConTendencia(min, max, tendencia) {
+    const rango = max - min + 1;
+    const ajuste = ((rango / 10) * tendencia) || 0;
+    
+    const valorBase = Math.floor(Math.random() * rango) + min;
+    return Math.floor(valorBase + ajuste);
+}
 module.exports = {
-    router,
+    routerAventurero,
     getListaNombres,
     asignarNombresAzar,
 };
