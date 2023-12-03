@@ -231,15 +231,10 @@ routerObjeto.get('/buscar/:nombre', async (req, res) => {
  *       - objeto
  *     parameters:
  *       - in: path
- *         name: categoria
- *         description: Categoría por la cual filtrar los objetos.
+ *         name: param
+ *         description: Parámetro para filtrar objetos. Puede ser una categoría (cadena) o un nivel (entero).
  *         schema:
- *           type: string
- *       - in: path
- *         name: nivel
- *         description: Nivel por el cual filtrar los objetos.
- *         schema:
- *           type: integer
+ *           type: string | integer
  *     responses:
  *       200:
  *         description: Devuelve la lista de objetos filtrada por categoría y/o nivel.
@@ -268,7 +263,7 @@ routerObjeto.get('/filtrar/:param', async (req, res) => {
             objetosFiltrados = objetosFiltrados.filter(objeto => objeto.nivel === nivel);
 
         }else if(typeof req.params.param === "string"){
-            console.log("Stringd")
+            //console.log("Stringd")
             objetosFiltrados = objetosFiltrados.filter(objeto => objeto.categoria === param);
         }else{
             res.status(405).json({ mensaje: "Error al reconocer el parametro", tipo: "Error en la colocacion de la ruta" });
@@ -282,7 +277,7 @@ routerObjeto.get('/filtrar/:param', async (req, res) => {
 });
 
 routerObjeto.get('*', (req, res) => {
-    res.status(404).json({ mensaje: "Ruta no encontrada xxx", tipo: "No encontrado xxx" });
+    res.status(404).json({ mensaje: "Ruta Objeto no encontrada xxx", tipo: "No encontrado xxx" });
 });
 
 

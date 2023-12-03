@@ -98,42 +98,7 @@ routerAventurero.get('/nombre/asignar',cargarJsonMiddleware , async (req, res) =
     }
 });
 
-/**
- * @swagger
- * /aventurero/informacion/raza:
- *   get:
- *     summary: Obtiene una raza al azar o según el índice proporcionado.
- *     tags:
- *       - aventurero
- *     parameters:
- *       - in: query
- *         name: raza
- *         description: Índice de la raza deseada. Si no se proporciona, se elige una raza al azar.
- *         schema:
- *           type: integer
- *           format: int32
- *     responses:
- *       '200':
- *         description: Devuelve la raza seleccionada.
- *         content:
- *           application/json:
- *             example:
- *               raza: "Humano"
- *       '400':
- *         description: Índice de raza no válido o solicitud inválida.
- *         content:
- *           application/json:
- *             example:
- *               mensaje: "Índice de raza no válido"
- *               tipo: "Solicitud inválida"
- *       '500':
- *         description: Error al procesar la solicitud.
- *         content:
- *           application/json:
- *             example:
- *               mensaje: "Error al procesar la solicitud"
- *               tipo: "Error interno del servidor"
- */
+
 const razas = [
     "Humano",
     "Enano",
@@ -152,7 +117,82 @@ const razas = [
     "No muerto",
     "Argentino"
 ]
-routerAventurero.get('/raza',cargarJsonMiddleware, async (req, res) => {
+
+/**
+ * Ruta para obtener la lista completa de razas.
+ * @swagger
+ * /aventurero/raza:
+ *   get:
+ *     summary: Obtiene la lista completa de razas disponibles.
+ *     tags:
+ *       - aventurero
+ *     responses:
+ *       200:
+ *         description: Devuelve la lista completa de razas.
+ *         content:
+ *           application/json:
+ *             example:
+ *               [
+ *                 "Humano",
+ *                 "Enano",
+ *                 ...
+ *                 "Argentino"
+ *               ]
+ *       500:
+ *         description: Error al procesar la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error al obtener la lista"
+ *               tipo: "Error interno del servidor"
+ */
+routerAventurero.get('/raza', async (req, res) => {
+    try {
+        // Enviar la lista completa como respuesta
+        res.json(razas);
+    } catch (err) {
+        // Manejo de errores si es necesario
+        res.status(500).json({ mensaje: "Error al obtener la lista", tipo: err.message });
+    }
+});
+
+/**
+ * Ruta para asignar una raza al azar o mediante un índice proporcionado.
+ * @swagger
+ * /aventurero/raza/asignar:
+ *   get:
+ *     summary: Asigna una raza al azar o mediante un índice proporcionado.
+ *     tags:
+ *       - aventurero
+ *     parameters:
+ *       - in: query
+ *         name: raza
+ *         description: Índice de la raza deseada. (Opcional)
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Devuelve la raza asignada.
+ *         content:
+ *           application/json:
+ *             example:
+ *               raza: "Humano"
+ *       400:
+ *         description: Índice de raza no válido.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Índice de raza no válido"
+ *               tipo: "Solicitud inválida"
+ *       500:
+ *         description: Error al procesar la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error al procesar la solicitud"
+ *               tipo: "Error interno del servidor"
+ */
+routerAventurero.get('/raza/asignar', async (req, res) => {
     try {
         // Obtener el parámetro de la raza de la solicitud
         const razaElegida = req.query.raza;
@@ -179,30 +219,27 @@ routerAventurero.get('/raza',cargarJsonMiddleware, async (req, res) => {
 
 /**
  * @swagger
- * /atributos:
- *   get:
+ * /atributos/obtener:
+ *   post:
  *     summary: Obtiene atributos basados en parámetros de nivel y tendencia.
  *     tags:
  *       - personaje
- *     parameters:
- *       - in: query
- *         name: lvlMinimo
- *         required: true
- *         description: Nivel mínimo del personaje.
- *         schema:
- *           type: integer
- *       - in: query
- *         name: lvlMaximo
- *         required: true
- *         description: Nivel máximo del personaje.
- *         schema:
- *           type: integer
- *       - in: query
- *         name: tendencia
- *         required: true
- *         description: Tendencia del personaje (entre 1 y 10).
- *         schema:
- *           type: integer
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               lvlMinimo:
+ *                 type: integer
+ *               lvlMaximo:
+ *                 type: integer
+ *               tendencia:
+ *                 type: integer
+ *             required:
+ *               - lvlMinimo
+ *               - lvlMaximo
+ *               - tendencia
  *     responses:
  *       200:
  *         description: Atributos generados exitosamente.
@@ -232,29 +269,28 @@ routerAventurero.get('/raza',cargarJsonMiddleware, async (req, res) => {
  *               mensaje: "Error interno del servidor"
  *               tipo: "Error interno del servidor"
  */
-routerAventurero.get('/atributos', cargarJsonMiddleware, async (req, res) => {
+routerAventurero.post('/atributos/obtener', cargarJsonMiddleware, async (req, res) => {
     try {
-        const lvlMinimo = req.query.lvlMinimo;
-        const lvlMaximo = req.query.lvlMaximo;
-        const tendencia = req.query.tendencia
-        if (!isNaN(lvlMinimo) 
-                && !isNaN(lvlMaximo) 
-                && !isNaN(tendencia) 
-                && tendencia > 0 
-                && tendencia <= 10) {
-                const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia,
-                     ptsFe] = Array(8).fill(0).map(() => calcularValorConTendencia(lvlMinimo, lvlMaximo, tendencia));
-                
-                res.status(200).json({ 
-                    ptsVida: ptsVida,
-                    ptsFuerza: ptsFuerza,
-                    ptsDestreza: ptsDestreza,
-                    ptsPoderDestreza: ptsPoderDestreza,
-                    ptsPuntoMental: ptsPuntoMental,
-                    ptsAgilidad: ptsAgilidad,
-                    ptsInteligencia: ptsInteligencia,
-                    ptsFe: ptsFe
-                });
+        const lvlMinimo = req.body.lvlMinimo;
+        const lvlMaximo = req.body.lvlMaximo;
+        const tendencia = req.body.tendencia;
+
+        //console.log(lvlMaximo, " ", lvlMinimo, " ", tendencia);
+
+        if (!isNaN(lvlMinimo) && !isNaN(lvlMaximo) && !isNaN(tendencia) && tendencia > 0 && tendencia <= 10) {
+            const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia,
+                ptsFe] = Array(8).fill(0).map(() => calcularValorConTendencia(lvlMinimo, lvlMaximo, tendencia));
+
+            res.status(200).json({
+                ptsVida: ptsVida,
+                ptsFuerza: ptsFuerza,
+                ptsDestreza: ptsDestreza,
+                ptsPoderDestreza: ptsPoderDestreza,
+                ptsPuntoMental: ptsPuntoMental,
+                ptsAgilidad: ptsAgilidad,
+                ptsInteligencia: ptsInteligencia,
+                ptsFe: ptsFe
+            });
         } else {
             res.status(400).json({ mensaje: "Parámetros inválidos", tipo: "Solicitud inválida" });
         }
@@ -263,6 +299,7 @@ routerAventurero.get('/atributos', cargarJsonMiddleware, async (req, res) => {
         res.status(500).json({ mensaje: "Error interno del servidor", tipo: "Error interno del servidor" });
     }
 });
+
 
 /**
  * Obtiene la lista completa de nombres y apellidos.
@@ -308,6 +345,9 @@ function calcularValorConTendencia(min, max, tendencia) {
     const valorBase = Math.floor(Math.random() * rango) + min;
     return Math.floor(valorBase + ajuste);
 }
+routerAventurero.get('*', (req, res) => {
+    res.status(404).json({ mensaje: "Ruta Aventurero/Informacion no encontrada xxx", tipo: "No encontrado xxx" });
+});
 module.exports = {
     routerAventurero,
     getListaNombres,

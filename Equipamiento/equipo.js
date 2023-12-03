@@ -1,6 +1,6 @@
 // Equipamiento/equipo.js
 
-const routerObjeto = require('express').Router();
+const routerEquipo = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 
@@ -57,7 +57,7 @@ const listaEquipo = [
     {
         id: 8,
         nombre: 'Capa comun',
-        cobertura: "Pies",
+        cobertura: "Espalda",
         nivel: 1,
         caracteristica: 'Un pedazo de tela que puedes poner en tu espalda'
     },
@@ -110,7 +110,7 @@ const listaEquipo = [
  *               mensaje: "Error al obtener la lista de equipamientos"
  *               tipo: "Error interno del servidor"
  */
-routerObjeto.get('/', async (req, res) => {
+routerEquipo.get('/', async (req, res) => {
     try {
         // Enviar la lista completa de equipamientos como respuesta
         res.json(listaEquipo);
@@ -120,6 +120,40 @@ routerObjeto.get('/', async (req, res) => {
     }
 });
 
+routerEquipo.get('/random/:nivel', async (req, res) => {
+    try {
+        const nivelMaximo = parseInt(req.params.nivel);
+
+        const categorias = new Set();
+        const equiposAleatorios = [];
+
+        // Filtrar las categorías disponibles
+        listaEquipo.forEach(equipo => {
+            if (equipo.nivel <= nivelMaximo) {
+                categorias.add(equipo.cobertura);
+            }
+        });
+
+        // Obtener un elemento aleatorio de cada categoría
+        categorias.forEach(categoria => {
+            const elementosCategoria = listaEquipo.filter(equipo => equipo.cobertura === categoria && equipo.nivel <= nivelMaximo);
+            if (elementosCategoria.length > 0) {
+                const elementoAleatorio = elementosCategoria[Math.floor(Math.random() * elementosCategoria.length)];
+                equiposAleatorios.push(elementoAleatorio);
+            }
+        });
+
+        res.json(equiposAleatorios);
+    } catch (err) {
+        // Manejo de errores si es necesario
+        res.status(500).json({ mensaje: "Error al obtener los objetos aleatorios", tipo: "Error interno del servidor" });
+    }
+});
+
+routerEquipo.get('*', (req, res) => {
+    res.status(404).json({ mensaje: "Ruta Equipo no encontrada xxx", tipo: "No encontrado xxx" });
+});
+
 module.exports = {
-    routerObjeto,
+    routerEquipo,
 };
