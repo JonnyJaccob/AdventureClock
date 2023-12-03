@@ -120,6 +120,38 @@ routerEquipo.get('/', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /equipo/random/{nivel}:
+ *   get:
+ *     summary: Obtiene elementos aleatorios de diferentes categorías según el nivel proporcionado.
+ *     tags:
+ *       - equipo
+ *     parameters:
+ *       - in: path
+ *         name: nivel
+ *         required: true
+ *         description: Nivel máximo para filtrar elementos aleatorios.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Devuelve elementos aleatorios de diferentes categorías.
+ *         content:
+ *           application/json:
+ *             example:
+ *               [
+ *                 { "id": 1, "nombre": "Espada de Fuego", "nivel": 2, "caracteristica": "Espada con llamas ardientes", "cobertura": "Ataque" },
+ *                 { "id": 3, "nombre": "Escudo Resistente", "nivel": 1, "caracteristica": "Escudo de alta resistencia", "cobertura": "Defensa" }
+ *               ]
+ *       500:
+ *         description: Error al procesar la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error al obtener los objetos aleatorios"
+ *               tipo: "Error interno del servidor"
+ */
 routerEquipo.get('/random/:nivel', async (req, res) => {
     try {
         const nivelMaximo = parseInt(req.params.nivel);

@@ -24,14 +24,14 @@ const listaInventario = [
         nombre: 'Pocion de invisibilidad',
         nivel: 2,
         caracteristica: 'Liquido transparente que otorga invisibilidad temporal',
-        categoria: 'Poción'
+        categoria: 'Pocion'
     },
     {
         id: 4,
         nombre: 'Libro antiguo',
         nivel: 1,
         caracteristica: 'Contiene conocimientos antiguos y secretos oscuros',
-        categoria: 'Misceláneo'
+        categoria: 'Miscelaneo'
     },
     {
         id: 5,
@@ -45,14 +45,14 @@ const listaInventario = [
         nombre: 'Botella de curacion',
         nivel: 3,
         caracteristica: 'Botella de vidrio con líquido azul',
-        categoria: 'Curación'
+        categoria: 'Curacion'
     },
     {
         id: 7,
         nombre: 'Sello de curacion',
         nivel: 4,
         caracteristica: 'Un pedazo de papel enrollado cuyo contenido son simbolos magicos',
-        categoria: 'Curación'
+        categoria: 'Curacion'
     },
 ];
 
@@ -72,14 +72,14 @@ const listaInventario = [
  *               [
  *                 {
  *                   id: 1,
- *                   nombre: "Botella de curación",
+ *                   nombre: "Botella de curacion",
  *                   nivel: 1,
  *                   caracteristica: "Botella de vidrio con líquido rojo",
- *                   categoria: "Curación"
+ *                   categoria: "Curacion"
  *                 },
  *                 {
  *                   id: 2,
- *                   nombre: "Espada mágica",
+ *                   nombre: "Espada magica",
  *                   nivel: 3,
  *                   caracteristica: "Hoja brillante con poderes mágicos",
  *                   categoria: "Arma"
@@ -100,7 +100,7 @@ routerObjeto.get('/', async (req, res) => {
         res.json(listaInventario);
     } catch (err) {
         // Manejo de errores si es necesario
-        res.status(500).json({ mensaje: "Error al obtener la lista", tipo: err.message });
+        res.status(500).json({ error: true, mensaje: "Error al obtener la lista", tipo: err.message });
     }
 });
 
@@ -126,10 +126,10 @@ routerObjeto.get('/', async (req, res) => {
  *           application/json:
  *             example:
  *               id: 1
- *               nombre: "Botella de curación"
+ *               nombre: "Botella de curacion"
  *               nivel: 1
  *               caracteristica: "Botella de vidrio con líquido rojo"
- *               categoria: "Curación"
+ *               categoria: "Curacion"
  *       404:
  *         description: Objeto no encontrado.
  *         content:
@@ -160,7 +160,7 @@ routerObjeto.get('/:id', async (req, res) => {
         }
     } catch (err) {
         // Manejo de errores si es necesario
-        res.status(500).json({ mensaje: "Error al obtener el objeto", tipo: "Error interno del servidor" });
+        res.status(500).json({ error: true, mensaje: "Error al obtener el objeto", tipo: "Error interno del servidor" });
     }
 });
 
@@ -185,10 +185,10 @@ routerObjeto.get('/:id', async (req, res) => {
  *           application/json:
  *             example:
  *               id: 1
- *               nombre: "Botella de curación"
+ *               nombre: "Botella de curacion"
  *               nivel: 1
  *               caracteristica: "Botella de vidrio con líquido rojo"
- *               categoria: "Curación"
+ *               categoria: "Curacion"
  *       404:
  *         description: Objeto no encontrado.
  *         content:
@@ -218,7 +218,7 @@ routerObjeto.get('/buscar/:nombre', async (req, res) => {
         }
     } catch (err) {
         // Manejo de errores si es necesario
-        res.status(500).json({ mensaje: "Error al obtener el objeto", tipo: "Error interno del servidor" });
+        res.status(500).json({error: true, mensaje: "Error al obtener el objeto", tipo: "Error interno del servidor" });
     }
 });
 
@@ -242,7 +242,7 @@ routerObjeto.get('/buscar/:nombre', async (req, res) => {
  *           application/json:
  *             example:
  *               [
- *                 { "id": 1, "nombre": "Botella de curación", "nivel": 1, "caracteristica": "Botella de vidrio con líquido rojo", "categoria": "Curación" },
+ *                 { "id": 1, "nombre": "Botella de curacion", "nivel": 1, "caracteristica": "Botella de vidrio con líquido rojo", "categoria": "Curacion" },
  *                 { "id": 2, "nombre": "Espada afilada", "nivel": 2, "caracteristica": "Espada de acero afilada", "categoria": "Arma" }
  *               ]
  *       500:
@@ -272,12 +272,12 @@ routerObjeto.get('/filtrar/:param', async (req, res) => {
         res.json(objetosFiltrados);
     } catch (err) {
         // Manejo de errores si es necesario
-        res.status(500).json({ mensaje: "Error al obtener la lista de objetos", tipo: "Error interno del servidor" });
+        res.status(500).json({ error: true, mensaje: "Error al obtener la lista de objetos", tipo: "Error interno del servidor" });
     }
 });
 
 routerObjeto.get('*', (req, res) => {
-    res.status(404).json({ mensaje: "Ruta Objeto no encontrada xxx", tipo: "No encontrado xxx" });
+    res.status(404).json({ error: true, mensaje: "Ruta Objeto no encontrada xxx", tipo: "No encontrado xxx" });
 });
 
 
