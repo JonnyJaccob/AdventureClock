@@ -11,6 +11,49 @@ const dataDeBase = {
 }
 
 /**
+ * Ruta para probar la conexión a la base de datos y ejecutar un método de prueba.
+ * @swagger
+ * /historia/test:
+ *   get:
+ *     summary: Prueba la conexión a la base de datos y ejecuta un método de prueba.
+ *     tags:
+ *       - historia
+ *     responses:
+ *       200:
+ *         description: Conexión exitosa y resultado del método de prueba.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Conexión exitosa"
+ *               resultado: 1
+ *       500:
+ *         description: Error al procesar la solicitud o conexión.
+ *         content:
+ *           application/json:
+ *             example:
+ *               mensaje: "Error de conexión"
+ *               tipo: "Mensaje de error específico"
+ *               sql: "Mensaje SQL específico"
+ */
+// Ruta de prueba de conexión
+routerConsulta.get('/test', async (req, res) => {
+    try {
+        // Crear una conexión a la base de datos
+        const connection = await mysql.createConnection(dataDeBase);
+        console.log(dataDeBase);
+        // Ejecutar un método de prueba (puedes personalizar esto)
+        const resultado = await connection.query('SELECT 1 as resultado');
+
+        // Cerrar la conexión
+        await connection.end();
+
+        res.status(200).json({ mensaje: 'Conexión exitosa', resultado: resultado[0][0].resultado });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error de conexión', tipo: error.message, sql: error.sqlMessage });
+    }
+});
+
+/**
  * Ruta para obtener información de todas las personas en el contexto de la historia.
  * @swagger
  * /historia/persona:
