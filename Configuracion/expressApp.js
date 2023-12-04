@@ -2,7 +2,7 @@
 const express = require('express');
 const setupSwagger = require('./swagger');
 const path = require('path');
-const { routerAventurero, getListaNombres, asignarNombresAzar,} = require(path.join(__dirname, '../Aventurero/informacion'));
+const { routerAventurero, getListaNombres, asignarNombresAzar } = require(path.join(__dirname, '../Aventurero/Informacion'));
 const { routerObjeto } = require(path.join(__dirname, '../objeto/objetos'));
 const { routerEquipo } = require(path.join(__dirname, '../Equipamiento/equipo'));
 const { routerConsulta } = require(path.join(__dirname,'./consultas'))
