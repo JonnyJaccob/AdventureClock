@@ -90,7 +90,7 @@ const listaEquipo = [
  *   get:
  *     summary: Obtiene todos los equipamientos disponibles.
  *     tags:
- *       - equipamiento
+ *       - equipo
  *     responses:
  *       200:
  *         description: Devuelve la lista de todos los equipamientos.
@@ -159,7 +159,7 @@ routerEquipo.get('/random/:nivel', async (req, res) => {
             res.status(405).json({ mensaje: "Método no permitido", tipo: "Error en la solicitud" });
             return;
         }
-        
+
         const nivelMaximo = parseInt(req.params.nivel);
 
         const categorias = new Set();
