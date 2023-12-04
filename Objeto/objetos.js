@@ -283,4 +283,5 @@ routerObjeto.get('*', (req, res) => {
 
 module.exports = {
     routerObjeto,
+    listaInventario,
 };
