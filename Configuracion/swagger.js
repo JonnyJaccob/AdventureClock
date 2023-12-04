@@ -26,10 +26,11 @@ defObj.info.description = read;
 const nuevaRuta1 = path.join(__dirname, '../Aventurero/informacion.js');
 const nuevaRuta2 = path.join(__dirname, '../objeto/objetos.js');
 const nuevaRuta3 = path.join(__dirname, '../Equipamiento/equipo.js');
+const nuevaRuta4 = path.join(__dirname, './consultas.js');
 
 const swaggerOptions = {
     definition: defObj,
-    apis: [nuevaRuta1, nuevaRuta2, nuevaRuta3],
+    apis: [nuevaRuta1, nuevaRuta2, nuevaRuta3, nuevaRuta4],
 };
 //swaggerOptions.apis.push(nuevaRuta1);
 
