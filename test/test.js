@@ -360,48 +360,63 @@ describe('Asignar una raza al azar o mediante un índice proporcionado', () => {
 
 describe('Obtiene atributos basados en parámetros de nivel y tendencia', () => {
     it('Devuelve atributos generados exitosamente con código de estado 200', (done) => {
-        const queryParams = {
+        const requestBody = {
             lvlMinimo: 1,
             lvlMaximo: 10,
             tendencia: 5
         };
 
         chai.request(app)
-            .get('/aventurero/informacion/atributos/obtener')
-            .query(queryParams)
+            .post('/aventurero/informacion/atributos/obtener')
+            .send(requestBody)
             .end((err, res) => {
+                // Verificar si hay errores durante la solicitud
                 chai.expect(err).to.be.null;
+
+                // Verificar el código de estado
                 chai.expect(res).to.have.status(200);
+
+                // Verificar el tipo y la estructura de la respuesta
                 chai.expect(res.body).to.be.an('object');
-                // Asegúrate de que la respuesta contiene las propiedades esperadas
-                chai.expect(res.body).to.have.property('ptsVida').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsFuerza').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsDestreza').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsPoderDestreza').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsPuntoMental').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsAgilidad').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsInteligencia').that.is.a('number');
-                chai.expect(res.body).to.have.property('ptsFe').that.is.a('number');
+                chai.expect(res.body).to.include.all.keys(
+                    'ptsVida', 'ptsFuerza', 'ptsDestreza', 'ptsPoderDestreza',
+                    'ptsPuntoMental', 'ptsAgilidad', 'ptsInteligencia', 'ptsFe'
+                );
+
+                // Verificar que las propiedades de la respuesta son números
+                for (const prop of Object.values(res.body)) {
+                    chai.expect(prop).to.be.a('number');
+                }
+
                 done();
             });
     });
 
     it('Devuelve un error 400 para parámetros inválidos con código de estado 400', (done) => {
-        const queryParams = {
+        const requestBody = {
             lvlMinimo: 'invalido',
             lvlMaximo: 10,
             tendencia: 5
         };
 
         chai.request(app)
-            .get('/aventurero/informacion/atributos/obtener')
-            .query(queryParams)
+            .post('/aventurero/informacion/atributos/obtener')
+            .send(requestBody)
             .end((err, res) => {
+                // Verificar el código de estado
                 chai.expect(res).to.have.status(400);
+
+                // Verificar el tipo y la estructura de la respuesta
                 chai.expect(res.body).to.be.an('object');
-                chai.expect(res.body).to.have.property('mensaje').that.is.a('string');
-                chai.expect(res.body).to.have.property('tipo').that.is.a('string');
+                chai.expect(res.body).to.include.all.keys('mensaje', 'tipo');
+
+                // Verificar que las propiedades de la respuesta son strings
+                for (const prop of Object.values(res.body)) {
+                    chai.expect(prop).to.be.a('string');
+                }
+
                 done();
             });
     });
 });
+
