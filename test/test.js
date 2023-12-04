@@ -420,3 +420,46 @@ describe('Obtiene atributos basados en parámetros de nivel y tendencia', () => 
     });
 });
 
+describe("Obtener la lista completa de personas", () => {
+    it("Prueba método GET", (done) => {
+        chai.request(app)
+            .get("/historia/persona")
+            .end((err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array'); // Asegura que la respuesta sea un array
+                // Agrega más expectativas según tu estructura de datos esperada
+                done();
+            });
+    });
+});
+
+describe('Obtener información de todos los objetos', () => {
+    it('debería obtener todos los objetos', (done) => {
+        chai.request(app)
+            .get('/historia/objeto')
+            .end((err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+                // Añade más expectativas según tu estructura de datos esperada
+                done();
+            });
+    });
+
+});
+
+
+describe('Obtener información de las mochilas', () => {
+    it('debería obtener todas las mochilas', (done) => {
+        chai.request(app)
+            .get('/historia/mochila')
+            .end((err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('array');
+                // Añade más expectativas según tu estructura de datos esperada
+                done();
+            });
+    });
+});

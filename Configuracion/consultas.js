@@ -718,19 +718,23 @@ routerConsulta.post('/objeto/', async (req, res) => {
         let IDObjeto;
         // Validar la existencia del objeto
         const objetoExistente = await validarExistenciaObjeto(nombre, categoria, nivel);
-        if( objetoExistente != null){
+        //console.log("Primer log",objetoExistente)
+        if( objetoExistente == null){
             const conexion = await mysql.createConnection(dataDeBase);
             const result = await conexion.query(
                 'INSERT INTO objeto (nombre, nivel, caracteristica, categoria) VALUES (?, ?, ?, ?)',
                 [nombre, nivel, caracteristica, categoria]
             );
-
+              
+            //console.log("medio ", result);
             IDObjeto = result.insertId;
+            //console.log("segundo ", IDObjeto);
             // Cerrar la conexión después de ejecutar la consulta
             await conexion.end();
 
         } else {
             IDObjeto = objetoExistente;
+            //console.log("tercero ", IDObjeto);
         }
 
         // Agregar el objeto a la mochila
@@ -1050,16 +1054,16 @@ routerConsulta.get('/mochila/',async (req,res) =>{
 /**
  * Ruta para borrar un objeto de la mochila en el contexto de la historia.
  * @swagger
- * /historia/mochila/{idMochila}:
+ * /historia/mochila/{idObjeto}:
  *   delete:
  *     summary: Borra un objeto de la mochila en el contexto de la historia.
  *     tags:
  *       - historia
  *     parameters:
  *       - in: path
- *         name: idMochila
+ *         name: idObjeto
  *         required: true
- *         description: ID de la mochila que se va a borrar.
+ *         description: ID del objeto que se va a borrar de la mochila.
  *         schema:
  *           type: integer
  *           example: 1
@@ -1071,11 +1075,11 @@ routerConsulta.get('/mochila/',async (req,res) =>{
  *             example:
  *               mensaje: "Objeto eliminado de la mochila con éxito"
  *       404:
- *         description: Mochila no encontrada.
+ *         description: Objeto no encontrado en la mochila.
  *         content:
  *           application/json:
  *             example:
- *               mensaje: "Mochila no encontrada"
+ *               mensaje: "Objeto no encontrado en la mochila"
  *       500:
  *         description: Error al procesar la solicitud.
  *         content:
@@ -1085,21 +1089,20 @@ routerConsulta.get('/mochila/',async (req,res) =>{
  *               tipo: "Mensaje de error específico"
  *               sql: "Mensaje SQL específico"
  */
-routerConsulta.delete('/mochila/:idMochila', async (req, res) => {
+routerConsulta.delete('/mochila/:idObjeto', async (req, res) => {
     try {
-        const idMochila = req.params.idMochila;
-
+        const idObjeto = req.params.idObjeto;
         const conexion = await mysql.createConnection(dataDeBase);
 
-        // Verificar si la mochila existe antes de proceder
-        const mochilaExistente = await verificarExistenciaMochila(idMochila);
-        if (!mochilaExistente) {
-            res.status(404).json({ mensaje: "Mochila no encontrada" });
+        // Verificar si el objeto existe en la mochila antes de proceder
+        const objetoEnMochila = await verificarExistenciaMochila(idObjeto);
+        if (!objetoEnMochila) {
+            res.status(404).json({ mensaje: "Objeto no encontrado en la mochila" });
             return;
         }
 
         // Eliminar la relación entre persona y objeto de la mochila
-        await conexion.query('DELETE FROM mochila WHERE id_mochila = ?', [idMochila]);
+        await conexion.query('DELETE FROM mochila WHERE id_objeto = ?', [idObjeto]);
 
         // Cerrar la conexión después de ejecutar la consulta
         await conexion.end();
@@ -1109,6 +1112,21 @@ routerConsulta.delete('/mochila/:idMochila', async (req, res) => {
         res.status(500).json({ mensaje: "Error de conexión", tipo: err.message, sql: err.sqlMessage });
     }
 });
+
+
+const verificarExistenciaMochila = async (id) => {
+    try {
+        const conexion = await mysql.createConnection(dataDeBase);
+        const [rows, fields] = await conexion.query('SELECT * FROM mochila WHERE id_objeto = ?', [id]);
+        
+        // Si hay al menos una fila, significa que la mochila existe
+        return rows.length > 0;
+    } catch (error) {
+        // Manejar el error aquí, podrías loguearlo o lanzar una excepción según tus necesidades
+        console.error('Error al verificar existencia de mochila:', error);
+        return false;
+    }
+};
 
 
 module.exports = {
