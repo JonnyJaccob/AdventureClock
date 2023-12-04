@@ -2,7 +2,6 @@ const routerConsulta = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 var mysql = require('mysql2/promise');
-const { listaInventario } = require(path.join(__dirname, '../objeto/objetos'));
 
 const dataDeBase = {
     host: process.env.HOSTNAME || 'localhost', 
