@@ -7,7 +7,8 @@ const dataDeBase = {
     host: process.env.HOSTNAME || 'localhost', 
     user: process.env.USER || 'root',
     password: process.env.PASSWORD || '',
-    database: process.env.DATABASE || 'adventure'
+    database: process.env.DATABASE || 'adventure',
+    connectTimeout: 60000
 }
 
 /**
