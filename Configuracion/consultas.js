@@ -8,7 +8,7 @@ const dataDeBase = {
     user: process.env.USER || 'root',
     password: process.env.PASSWORD || '',
     database: process.env.DATABASE || 'adventure',
-    connectTimeout: 120000
+    connectTimeout: 10000
 }
 
 /**
