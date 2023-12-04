@@ -222,26 +222,30 @@ routerAventurero.get('/raza/asignar', async (req, res) => {
  * Ruta para obtener atributos de un aventurero basados en parámetros de nivel y tendencia.
  * @swagger
  * /aventurero/informacion/atributos/obtener:
- *   get:
+ *   post:
  *     summary: Obtiene los atributos de un aventurero basados en parámetros de nivel y tendencia.
  *     tags:
  *       - aventurero
  *     parameters:
- *       - in: query
- *         name: lvlMinimo
- *         description: Nivel mínimo del aventurero.
+ *       - in: body
+ *         name: persona
+ *         description: Datos del aventurero para calcular atributos.
+ *         required: true
  *         schema:
- *           type: integer
- *       - in: query
- *         name: lvlMaximo
- *         description: Nivel máximo del aventurero.
- *         schema:
- *           type: integer
- *       - in: query
- *         name: tendencia
- *         description: Tendencia del aventurero (entre 1 y 10).
- *         schema:
- *           type: integer
+ *           type: object
+ *           properties:
+ *             lvlMinimo:
+ *               type: integer
+ *               description: Nivel mínimo del aventurero.
+ *               example: 1
+ *             lvlMaximo:
+ *               type: integer
+ *               description: Nivel máximo del aventurero.
+ *               example: 10
+ *             tendencia:
+ *               type: integer
+ *               description: Tendencia del aventurero (entre 1 y 10).
+ *               example: 5
  *     responses:
  *       200:
  *         description: Devuelve los atributos calculados del aventurero.
@@ -271,11 +275,11 @@ routerAventurero.get('/raza/asignar', async (req, res) => {
  *               mensaje: "Error interno del servidor"
  *               tipo: "Error interno del servidor"
  */
-routerAventurero.get('/atributos/obtener', cargarJsonMiddleware, async (req, res) => {
+routerAventurero.post('/atributos/obtener', cargarJsonMiddleware, async (req, res) => {
     try {
-        const lvlMinimo = parseInt(req.query.lvlMinimo);
-        const lvlMaximo = parseInt(req.query.lvlMaximo);
-        const tendencia = parseInt(req.query.tendencia);
+        const lvlMinimo = parseInt(req.body.lvlMinimo);
+        const lvlMaximo = parseInt(req.body.lvlMaximo);
+        const tendencia = parseInt(req.body.tendencia);
 
         if (!isNaN(lvlMinimo) && !isNaN(lvlMaximo) && !isNaN(tendencia) && tendencia > 0 && tendencia <= 10) {
             const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia, ptsFe] =
@@ -299,6 +303,7 @@ routerAventurero.get('/atributos/obtener', cargarJsonMiddleware, async (req, res
         res.status(500).json({ mensaje: "Error interno del servidor", tipo: "Error interno del servidor" });
     }
 });
+
 
 
 
