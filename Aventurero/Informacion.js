@@ -217,45 +217,47 @@ routerAventurero.get('/raza/asignar', async (req, res) => {
     }
 });
 
+
 /**
+ * Ruta para obtener atributos de un aventurero basados en parámetros de nivel y tendencia.
  * @swagger
  * /aventurero/informacion/atributos/obtener:
- *   post:
- *     summary: Obtiene atributos basados en parámetros de nivel y tendencia.
+ *   get:
+ *     summary: Obtiene los atributos de un aventurero basados en parámetros de nivel y tendencia.
  *     tags:
- *       - personaje
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               lvlMinimo:
- *                 type: integer
- *               lvlMaximo:
- *                 type: integer
- *               tendencia:
- *                 type: integer
- *             required:
- *               - lvlMinimo
- *               - lvlMaximo
- *               - tendencia
+ *       - aventurero
+ *     parameters:
+ *       - in: query
+ *         name: lvlMinimo
+ *         description: Nivel mínimo del aventurero.
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: lvlMaximo
+ *         description: Nivel máximo del aventurero.
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: tendencia
+ *         description: Tendencia del aventurero (entre 1 y 10).
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: Atributos generados exitosamente.
+ *         description: Devuelve los atributos calculados del aventurero.
  *         content:
  *           application/json:
  *             example:
- *               ptsVida: 50
- *               ptsFuerza: 8
- *               ptsDestreza: 12
- *               ptsPoderDestreza: 5
- *               ptsPuntoMental: 20
- *               ptsAgilidad: 15
- *               ptsInteligencia: 18
- *               ptsFe: 10
+ *               ptsVida: 100,
+ *               ptsFuerza: 20,
+ *               ptsDestreza: 15,
+ *               ptsPoderDestreza: 10,
+ *               ptsPuntoMental: 25,
+ *               ptsAgilidad: 18,
+ *               ptsInteligencia: 30,
+ *               ptsFe: 5
  *       400:
- *         description: Parámetros inválidos.
+ *         description: Parámetros de solicitud inválidos.
  *         content:
  *           application/json:
  *             example:
@@ -269,27 +271,25 @@ routerAventurero.get('/raza/asignar', async (req, res) => {
  *               mensaje: "Error interno del servidor"
  *               tipo: "Error interno del servidor"
  */
-routerAventurero.post('/atributos/obtener', cargarJsonMiddleware, async (req, res) => {
+routerAventurero.get('/atributos/obtener', cargarJsonMiddleware, async (req, res) => {
     try {
-        const lvlMinimo = req.body.lvlMinimo;
-        const lvlMaximo = req.body.lvlMaximo;
-        const tendencia = req.body.tendencia;
-
-        //console.log(lvlMaximo, " ", lvlMinimo, " ", tendencia);
+        const lvlMinimo = parseInt(req.query.lvlMinimo);
+        const lvlMaximo = parseInt(req.query.lvlMaximo);
+        const tendencia = parseInt(req.query.tendencia);
 
         if (!isNaN(lvlMinimo) && !isNaN(lvlMaximo) && !isNaN(tendencia) && tendencia > 0 && tendencia <= 10) {
-            const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia,
-                ptsFe] = Array(8).fill(0).map(() => calcularValorConTendencia(lvlMinimo, lvlMaximo, tendencia));
+            const [ptsVida, ptsFuerza, ptsDestreza, ptsPoderDestreza, ptsPuntoMental, ptsAgilidad, ptsInteligencia, ptsFe] =
+                Array(8).fill(0).map(() => calcularValorConTendencia(lvlMinimo, lvlMaximo, tendencia));
 
             res.status(200).json({
-                ptsVida: ptsVida,
-                ptsFuerza: ptsFuerza,
-                ptsDestreza: ptsDestreza,
-                ptsPoderDestreza: ptsPoderDestreza,
-                ptsPuntoMental: ptsPuntoMental,
-                ptsAgilidad: ptsAgilidad,
-                ptsInteligencia: ptsInteligencia,
-                ptsFe: ptsFe
+                ptsVida,
+                ptsFuerza,
+                ptsDestreza,
+                ptsPoderDestreza,
+                ptsPuntoMental,
+                ptsAgilidad,
+                ptsInteligencia,
+                ptsFe
             });
         } else {
             res.status(400).json({ mensaje: "Parámetros inválidos", tipo: "Solicitud inválida" });
@@ -299,6 +299,7 @@ routerAventurero.post('/atributos/obtener', cargarJsonMiddleware, async (req, re
         res.status(500).json({ mensaje: "Error interno del servidor", tipo: "Error interno del servidor" });
     }
 });
+
 
 
 /**

@@ -360,15 +360,15 @@ describe('Asignar una raza al azar o mediante un índice proporcionado', () => {
 
 describe('Obtiene atributos basados en parámetros de nivel y tendencia', () => {
     it('Devuelve atributos generados exitosamente con código de estado 200', (done) => {
-        const requestBody = {
+        const queryParams = {
             lvlMinimo: 1,
             lvlMaximo: 10,
             tendencia: 5
         };
 
         chai.request(app)
-            .post('/aventurero/informacion/atributos/obtener')
-            .send(requestBody)
+            .get('/aventurero/informacion/atributos/obtener')
+            .query(queryParams)
             .end((err, res) => {
                 chai.expect(err).to.be.null;
                 chai.expect(res).to.have.status(200);
@@ -387,15 +387,15 @@ describe('Obtiene atributos basados en parámetros de nivel y tendencia', () => 
     });
 
     it('Devuelve un error 400 para parámetros inválidos con código de estado 400', (done) => {
-        const requestBody = {
+        const queryParams = {
             lvlMinimo: 'invalido',
             lvlMaximo: 10,
             tendencia: 5
         };
 
         chai.request(app)
-            .post('/aventurero/informacion/atributos/obtener')
-            .send(requestBody)
+            .get('/aventurero/informacion/atributos/obtener')
+            .query(queryParams)
             .end((err, res) => {
                 chai.expect(res).to.have.status(400);
                 chai.expect(res.body).to.be.an('object');
