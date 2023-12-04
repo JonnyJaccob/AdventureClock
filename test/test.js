@@ -196,18 +196,211 @@ describe('Busca una lista de equipos', () => {
     });
 });
 
-
-
-describe("Obtener la lista de nombres", () => {
-    it("Prueba método GET", (done) => {
+describe('Obtiene elementos aleatorios de diferentes categorías', () => {
+    it('Devuelve elementos aleatorios con código de estado 200', (done) => {
         chai.request(app)
-            .get("/aventurero/informacion/nombre")
+            .get('/equipo/random/2')
             .end((err, res) => {
-                expect(err).to.be.null;
-                expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object'); // Asegura que la respuesta sea un objeto
-                expect(res.body.nombres).to.be.an('array'); // Asegura que 'nombres' sea un array
-                // Agrega más expectativas según tu estructura de datos esperada
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('array');
+                done();
+            });
+    });
+
+    it('Devuelve elementos aleatorios con propiedades específicas', (done) => {
+        chai.request(app)
+            .get('/equipo/random/2')
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('array');
+
+                // Añade más expectativas según las propiedades específicas que esperas en los elementos aleatorios
+                if (res.body.length > 0) {
+                    chai.expect(res.body[0]).to.have.property('id');
+                    chai.expect(res.body[0]).to.have.property('nombre');
+                    chai.expect(res.body[0]).to.have.property('cobertura');
+                    chai.expect(res.body[0]).to.have.property('nivel');
+                    chai.expect(res.body[0]).to.have.property('caracteristica');
+                }
+
+                done();
+            });
+    });
+});
+
+//Seccion aventurero/informacion
+describe('Obtiene la lista completa de nombres y apellidos', () => {
+    it('Devuelve la lista completa con código de estado 200', (done) => {
+        chai.request(app)
+            .get('/aventurero/informacion/nombre')
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object');
+                chai.expect(res.body).to.have.property('nombres').that.is.an('array');
+                chai.expect(res.body).to.have.property('apellidos').that.is.an('array');
+
+                done();
+            });
+    });
+
+    it('Devuelve la lista completa con propiedades específicas', (done) => {
+        chai.request(app)
+            .get('/aventurero/informacion/nombre')
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object');
+                chai.expect(res.body).to.have.property('nombres').that.is.an('array');
+                chai.expect(res.body).to.have.property('apellidos').that.is.an('array');
+
+
+                // Añade más expectativas según las propiedades específicas que esperas en la lista
+                if (res.body.length > 0) {
+                    chai.expect(res.body[0]).to.have.property('nombre');
+                    chai.expect(res.body[0]).to.have.property('apellido');
+                }
+
+                done();
+            });
+    });
+});
+
+describe('Asigna nombres y apellidos al azar', () => {
+    it('Devuelve la información de una persona con nombres y apellidos asignados al azar con código de estado 200', (done) => {
+        chai.request(app)
+            .get('/aventurero/informacion/nombre/asignar')
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object'); // Asegúrate de que la respuesta sea un objeto
+                chai.expect(res.body).to.have.property('nombre').that.is.a('string');
+                chai.expect(res.body).to.have.property('apellido').that.is.a('string');
+                done();
+            });
+    });
+});
+
+it('Devuelve la lista con razas específicas', (done) => {
+    chai.request(app)
+        .get('/aventurero/informacion/raza')
+        .end((err, res) => {
+            chai.expect(err).to.be.null;
+            chai.expect(res).to.have.status(200);
+            chai.expect(res.body).to.be.an('array'); // Asegúrate de que la respuesta sea un array
+            // Añade más expectativas según las razas específicas que esperas en la respuesta
+            const razasEsperadas = [
+                "Humano",
+                "Enano",
+                "Draconico",
+                "Ogro",
+                "Lagarto",
+                "Minotaruo",
+                "Nueva era",
+                "Elfo",
+                "Demoniaco",
+                "Barbaro",
+                "Gente escombro",
+                "Intelectual",
+                "Enano",
+                "Hobbit",
+                "No muerto",
+                "Argentino"
+            ];
+            razasEsperadas.forEach(raza => {
+                chai.expect(res.body).to.include(raza);
+            });
+            done();
+        });
+});
+
+describe('Asignar una raza al azar o mediante un índice proporcionado', () => {
+    it('Devuelve una raza al azar sin proporcionar un índice', (done) => {
+        chai.request(app)
+            .get('/aventurero/informacion/raza/asignar')
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object'); // Asegúrate de que la respuesta sea un objeto
+                chai.expect(res.body).to.have.property('raza').that.is.a('string');
+                done();
+            });
+    });
+
+    it('Devuelve una raza al proporcionar un índice válido', (done) => {
+        const indiceValido = 2; // Puedes ajustar el índice según tu necesidad
+
+        chai.request(app)
+            .get(`/aventurero/informacion/raza/asignar?raza=${indiceValido}`)
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object');
+                chai.expect(res.body).to.have.property('raza').that.is.a('string');
+                done();
+            });
+    });
+
+    it('Devuelve un error 400 al proporcionar un índice inválido', (done) => {
+        const indiceInvalido = 'invalido';
+
+        chai.request(app)
+            .get(`/aventurero/informacion/raza/asignar?raza=${indiceInvalido}`)
+            .end((err, res) => {
+                chai.expect(res).to.have.status(400);
+                chai.expect(res.body).to.be.an('object');
+                chai.expect(res.body).to.have.property('mensaje').that.is.a('string');
+                chai.expect(res.body).to.have.property('tipo').that.is.a('string');
+                done();
+            });
+    });
+});
+
+describe('Obtiene atributos basados en parámetros de nivel y tendencia', () => {
+    it('Devuelve atributos generados exitosamente con código de estado 200', (done) => {
+        const requestBody = {
+            lvlMinimo: 1,
+            lvlMaximo: 10,
+            tendencia: 5
+        };
+
+        chai.request(app)
+            .post('/aventurero/informacion/atributos/obtener')
+            .send(requestBody)
+            .end((err, res) => {
+                chai.expect(err).to.be.null;
+                chai.expect(res).to.have.status(200);
+                chai.expect(res.body).to.be.an('object');
+                // Asegúrate de que la respuesta contiene las propiedades esperadas
+                chai.expect(res.body).to.have.property('ptsVida').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsFuerza').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsDestreza').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsPoderDestreza').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsPuntoMental').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsAgilidad').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsInteligencia').that.is.a('number');
+                chai.expect(res.body).to.have.property('ptsFe').that.is.a('number');
+                done();
+            });
+    });
+
+    it('Devuelve un error 400 para parámetros inválidos con código de estado 400', (done) => {
+        const requestBody = {
+            lvlMinimo: 'invalido',
+            lvlMaximo: 10,
+            tendencia: 5
+        };
+
+        chai.request(app)
+            .post('/aventurero/informacion/atributos/obtener')
+            .send(requestBody)
+            .end((err, res) => {
+                chai.expect(res).to.have.status(400);
+                chai.expect(res.body).to.be.an('object');
+                chai.expect(res.body).to.have.property('mensaje').that.is.a('string');
+                chai.expect(res.body).to.have.property('tipo').that.is.a('string');
                 done();
             });
     });

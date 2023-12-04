@@ -121,7 +121,7 @@ const razas = [
 /**
  * Ruta para obtener la lista completa de razas.
  * @swagger
- * /aventurero/raza:
+ * /aventurero/informacion/raza:
  *   get:
  *     summary: Obtiene la lista completa de razas disponibles.
  *     tags:
@@ -159,7 +159,7 @@ routerAventurero.get('/raza', async (req, res) => {
 /**
  * Ruta para asignar una raza al azar o mediante un índice proporcionado.
  * @swagger
- * /aventurero/raza/asignar:
+ * /aventurero/informacion/raza/asignar:
  *   get:
  *     summary: Asigna una raza al azar o mediante un índice proporcionado.
  *     tags:
@@ -219,7 +219,7 @@ routerAventurero.get('/raza/asignar', async (req, res) => {
 
 /**
  * @swagger
- * /atributos/obtener:
+ * /aventurero/informacion/atributos/obtener:
  *   post:
  *     summary: Obtiene atributos basados en parámetros de nivel y tendencia.
  *     tags:

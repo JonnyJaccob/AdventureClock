@@ -86,7 +86,7 @@ const listaEquipo = [
 
 /**
  * @swagger
- * /:
+ * /equipo/:
  *   get:
  *     summary: Obtiene todos los equipamientos disponibles.
  *     tags:
@@ -154,6 +154,12 @@ routerEquipo.get('/', async (req, res) => {
  */
 routerEquipo.get('/random/:nivel', async (req, res) => {
     try {
+
+        if (req.method !== 'GET') {
+            res.status(405).json({ mensaje: "Método no permitido", tipo: "Error en la solicitud" });
+            return;
+        }
+        
         const nivelMaximo = parseInt(req.params.nivel);
 
         const categorias = new Set();

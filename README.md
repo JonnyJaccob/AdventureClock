@@ -2,6 +2,8 @@
 Una api para administrar un juego de aventureros.  
 Adventure Clock es una api para administrar un juego de aventureros. Proporciona funcionalidades para manejar objetos, razas, atributos y más.
 
+con +100 nombres y apellidos
+
 ## Instalación
 Para instalar Adventure Clock, simplemente ejecuta:
 
