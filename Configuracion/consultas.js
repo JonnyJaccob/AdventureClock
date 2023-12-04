@@ -695,7 +695,7 @@ routerConsulta.get('/objeto/',async (req,res) =>{
  *         content:
  *           application/json:
  *             example:
- *               mensaje: "Persona no encontrada"  // o "Objeto no encontrado"
+ *               mensaje: "Persona no encontrada"  # o "Objeto no encontrado"
  *       500:
  *         description: Error al procesar la solicitud.
  *         content:
@@ -717,20 +717,20 @@ routerConsulta.post('/objeto/', async (req, res) => {
         }
         let IDObjeto;
         // Validar la existencia del objeto
-        const objetoExistente = await validarExistenciaObjeto(id_objeto);
+        const objetoExistente = await validarExistenciaObjeto(nombre, categoria, nivel);
         if( objetoExistente != null){
             const conexion = await mysql.createConnection(dataDeBase);
-                const result = await conexion.query(
-                    'INSERT INTO objeto (nombre, nivel, caracteristica, categoria) VALUES (?, ?, ?, ?)',
-                    [nombre, nivel, caracteristica, categoria]
-                );
+            const result = await conexion.query(
+                'INSERT INTO objeto (nombre, nivel, caracteristica, categoria) VALUES (?, ?, ?, ?)',
+                [nombre, nivel, caracteristica, categoria]
+            );
 
-                IDObjeto = result.insertId;
-                // Cerrar la conexión después de ejecutar la consulta
-                await conexion.end();
+            IDObjeto = result.insertId;
+            // Cerrar la conexión después de ejecutar la consulta
+            await conexion.end();
 
-        }else{
-            IDObjeto = objetoExistente
+        } else {
+            IDObjeto = objetoExistente;
         }
 
         // Agregar el objeto a la mochila
@@ -741,6 +741,7 @@ routerConsulta.post('/objeto/', async (req, res) => {
         res.status(500).json({ mensaje: "Error de conexión", tipo: err.message, sql: err.sqlMessage });
     }
 });
+
 
 const validarExistenciaPersona = async (idPersona) => {
     try {
@@ -928,7 +929,7 @@ const actualizarObjeto = async (idObjeto,nombre, nivel, caracteristica) => {
  *         content:
  *           application/json:
  *             example:
- *               mensaje: "Objeto no encontrado en la mochila de la persona"  // o "Relación no existente"
+ *               mensaje: "Persona no encontrada"  # o "Objeto no encontrado"
  *       500:
  *         description: Error al procesar la solicitud.
  *         content:
