@@ -38,9 +38,10 @@ const dataDeBase = {
 // Ruta de prueba de conexión
 routerConsulta.get('/test', async (req, res) => {
     try {
+        console.log(dataDeBase);
         // Crear una conexión a la base de datos
         const connection = await mysql.createConnection(dataDeBase);
-        console.log(dataDeBase);
+        
         // Ejecutar un método de prueba (puedes personalizar esto)
         const resultado = await connection.query('SELECT 1 as resultado');
 
