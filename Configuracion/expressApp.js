@@ -8,7 +8,7 @@ const { routerEquipo } = require(path.join(__dirname, '../Equipamiento/equipo'))
 const { routerConsulta } = require(path.join(__dirname,'./consultas'))
 
 const app = express();
-const PORT = process.env.PORT || 8083 ;
+const PORT = 8883 ;
 
 const cors = require('cors');
 app.use(cors()); 
