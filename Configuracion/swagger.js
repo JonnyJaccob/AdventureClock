@@ -39,7 +39,7 @@ const swaggerOptions = {
 //swaggerOptions.apis.push(nuevaRuta1);
 
 function setupSwagger(app, PORT) {
-    swaggerOptions.definition.servers = [{ url: `http://localhost:${PORT}` }];
+    swaggerOptions.definition.servers = [{ url: `${process.env.HOSTNAME || 'localhost'}:${PORT}` }];
     //const jsonString = JSON.stringify(swaggerOptions, null, 2);
     //console.log(jsonString);
 

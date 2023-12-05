@@ -8,6 +8,7 @@ const dataDeBase = {
     user: process.env.USER || 'root',
     password: process.env.PASSWORD || '',
     database: process.env.DATABASE || 'adventure',
+    port: process.env.PORT || '3306',
     connectTimeout: 10000
 }
 
