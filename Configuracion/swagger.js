@@ -7,7 +7,8 @@ const { SwaggerTheme } = require('swagger-themes');
 const redoc = require('redoc-express');
 
 const cors = require('cors');
-app.use(cors());
+app.use(cors()); 
+const t = 1
 
 const theme = new SwaggerTheme('v3');
 
