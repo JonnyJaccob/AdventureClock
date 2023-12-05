@@ -49,6 +49,7 @@ function setupSwagger(app, PORT) {
 
     app.get(
         '/api-docs-redoc',
+        cors(), // Agregar el middleware cors aquí
         redoc({
           title: 'API Docs',
           specUrl: '/api-docs-json',
