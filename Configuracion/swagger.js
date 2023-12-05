@@ -6,6 +6,9 @@ const fs = require('fs');
 const { SwaggerTheme } = require('swagger-themes');
 const redoc = require('redoc-express');
 
+const cors = require('cors');
+app.use(cors());
+
 const theme = new SwaggerTheme('v3');
 
 const options = {
@@ -41,7 +44,7 @@ function setupSwagger(app, PORT) {
 
     const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-    app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs, options));
+    app.use('/api-docs',cors() ,swaggerUI.serve, swaggerUI.setup(swaggerDocs, options));
 
     app.use("/api-docs-json",(req, res) =>{
         res.json(swaggerDocs)
