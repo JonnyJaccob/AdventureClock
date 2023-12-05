@@ -10,7 +10,9 @@ const { routerConsulta } = require(path.join(__dirname,'./consultas'))
 const app = express();
 const PORT = process.env.PORT || 8083;
 
-
+const cors = require('cors');
+app.use(cors()); 
+const t = 1
 
 // Establecer el puerto en la aplicación
 app.set('port', PORT);

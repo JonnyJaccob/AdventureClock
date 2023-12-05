@@ -7,8 +7,7 @@ const { SwaggerTheme } = require('swagger-themes');
 const redoc = require('redoc-express');
 
 const cors = require('cors');
-app.use(cors()); 
-const t = 1
+
 
 const theme = new SwaggerTheme('v3');
 
@@ -35,6 +34,7 @@ const nuevaRuta4 = path.join(__dirname, './consultas.js');
 const swaggerOptions = {
     definition: defObj,
     apis: [nuevaRuta1, nuevaRuta2, nuevaRuta3, nuevaRuta4],
+    schemes: ["http", "https"],
 };
 //swaggerOptions.apis.push(nuevaRuta1);
 
