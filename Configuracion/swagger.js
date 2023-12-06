@@ -27,7 +27,7 @@ const read = fs.readFileSync(readmePath, { encoding: 'utf8', flag: 'r' });
 defObj.info.description = read;
 
 const nuevaRuta1 = path.join(__dirname, '../Aventurero/informacion.js');
-const nuevaRuta2 = path.join(__dirname, '../objeto/objetos.js');
+const nuevaRuta2 = path.join(__dirname, '../Objeto/objetos.js');
 const nuevaRuta3 = path.join(__dirname, '../Equipamiento/equipo.js');
 const nuevaRuta4 = path.join(__dirname, './consultas.js');
 
